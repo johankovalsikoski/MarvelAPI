@@ -1,5 +1,6 @@
 package com.kovalsikoski.johan.marvelapi
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -24,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressDialog: AlertDialog
 
     private var charactersList = mutableListOf<MarvelModel.MarvelPage.Characters>()
+    private var totalCharacters = 0
+    private var offSet = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +38,10 @@ class MainActivity : AppCompatActivity() {
         buildAlertDialogForProgress()
         firstLoad(ts, hash)
 
+        /*
+        onScroll { if(offSet<totalCharacters) { nextPage(ts,hash,offSet) } }
+        */
+
     }
 
     private fun firstLoad(ts: String, hash: String){
@@ -45,10 +52,44 @@ class MainActivity : AppCompatActivity() {
         call.enqueue(object : Callback<MarvelModel> {
             override fun onResponse(call: Call<MarvelModel>?, response: Response<MarvelModel>?) {
                 if (response?.body()?.code == 200) {
+
+                    totalCharacters = response.body()!!.data.count
+
                     response.body()!!.data.results.let {
                         charactersList.addAll(it)
                         progressDialog.dismiss()
                         initRecyclerView()
+                    }
+                } else {
+                    progressDialog.dismiss()
+                    Toast.makeText(this@MainActivity, getString(R.string.cant_load_content), Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<MarvelModel>?, t: Throwable?) {
+                Log.e("error", t?.message)
+                progressDialog.dismiss()
+            }
+        })
+    }
+
+    private fun nextPage(ts: String, hash: String, offset: Int){
+        progressDialog.show()
+
+        val call = RetrofitInitializer().marvelService().getCharactersNextPage(ts, getString(R.string.public_key),hash, offset)
+
+        call.enqueue(object : Callback<MarvelModel> {
+            override fun onResponse(call: Call<MarvelModel>?, response: Response<MarvelModel>?) {
+                if (response?.body()?.code == 200) {
+
+                    response.body()!!.data.results.let {
+                        charactersList.addAll(it)
+                        progressDialog.dismiss()
+                        initRecyclerView()
+
+                        if(offset<totalCharacters){
+                            offSet+=20
+                        }
                     }
                 } else {
                     progressDialog.dismiss()
