@@ -22,17 +22,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CharacterAdapter
     private lateinit var progressDialog: AlertDialog
-    private lateinit var charactersList: MutableList<MarvelModel.MarvelPage.Characters>
 
-    private val ts = Date().time.toString()
-    private val hash = createHash(ts)
+    private var charactersList = mutableListOf<MarvelModel.MarvelPage.Characters>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        buildAlertDialogForProgress()
+        val ts = Date().time.toString()
+        val hash = createHash(ts)
 
+        buildAlertDialogForProgress()
         firstLoad(ts, hash)
 
     }
