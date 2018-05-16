@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Marvel API</string>
-    
+
     <string name="public_key">63c845f07f40335b0a40a3942bcc5ca8</string>
     <string name="private_key">0dba2430609a6e2aaa8c2f07997a6be68c331ba9</string>
 </resources>
