@@ -2,12 +2,20 @@ package com.kovalsikoski.johan.marvelapi
 
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Url
+import retrofit2.http.Query
 
 interface MarvelService {
 
-    @GET
-//    @GET("v1/public/characters?ts=1526419169643&apikey=63c845f07f40335b0a40a3942bcc5ca8&hash=9ad4455630555fbb82024ab5d605dc55")
-    fun getCharactersPage(@Url url: String): Call<MarvelModel>
+    @GET("v1/public/characters")
+    fun getCharactersFirstPage(
+        @Query("ts") ts: String,
+        @Query("apikey") apiKey: String,
+        @Query("hash") hash: String): Call<MarvelModel>
 
+    @GET("v1/public/characters")
+    fun getCharactersNextPage(
+            @Query("ts") ts: String,
+            @Query("apikey") apiKey: String,
+            @Query("hash") hash: String,
+            @Query("offset") offset: Int): Call<MarvelModel>
 }
