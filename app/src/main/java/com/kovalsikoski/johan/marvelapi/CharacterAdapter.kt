@@ -1,13 +1,18 @@
 package com.kovalsikoski.johan.marvelapi
 
+import android.app.FragmentManager
+import android.app.FragmentTransaction
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.cardview_character.view.*
 
-class CharacterAdapter(private val characterList: MutableList<MarvelModel.MarvelPage.Characters>,
+
+class CharacterAdapter(private val characterList: MutableList<MarvelModel.MarvelPage.Character>,
                        private val context: Context) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,18 +25,22 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val character = characterList[position]
         holder.bindView(character)
+
+        holder.itemView.setOnClickListener {
+            //
+        }
     }
 
-    fun add(character: MarvelModel.MarvelPage.Characters){
+    fun add(character: MarvelModel.MarvelPage.Character){
         characterList.add(character)
         notifyItemInserted(characterList.size-1)
     }
 
-    fun addAll(characterList: MutableList<MarvelModel.MarvelPage.Characters>){
+    fun addAll(characterList: MutableList<MarvelModel.MarvelPage.Character>){
         characterList.forEach { add(it) }
     }
 
-    fun remove(character: MarvelModel.MarvelPage.Characters){
+    fun remove(character: MarvelModel.MarvelPage.Character){
         val position = characterList.indexOf(character)
         if(position > -1) {
             characterList.removeAt(position)
@@ -47,31 +56,8 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
         }
     }
 
-    /*public MyheroRecyclerViewAdapter(Context context, List<Hero> items, OnListFragmentInteractionListener listener, RecyclerView recyclerView) {
-this.mHeroes = items;
-mListener = listener;
-this.mContext = context;
-if(recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-    final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            totalItemCount = linearLayoutManager.getItemCount();
-            lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-            if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                if (onLoadMoreListener != null) {
-                    onLoadMoreListener.onLoadMore();
-                }
-                loading = true;
-            }
-        }
-    });
-}
-}*/
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindView(character: MarvelModel.MarvelPage.Characters) {
+        fun bindView(character: MarvelModel.MarvelPage.Character) {
             val characterTextView = itemView.character_name_textview
 
             characterTextView.text = character.name

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: CharacterAdapter
 
     private var layoutManager = GridLayoutManager(this@MainActivity, StaggeredGridLayoutManager.VERTICAL)
-    private var charactersList = mutableListOf<MarvelModel.MarvelPage.Characters>()
+    private var charactersList = mutableListOf<MarvelModel.MarvelPage.Character>()
 
     private var timeStamp = ""
     private var hash = ""
@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
+
     }
 
     private fun loadFirstCharacterPage(ts: String, hash: String){
@@ -67,8 +68,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<MarvelModel>?, response: Response<MarvelModel>?) {
                 if (response?.body()?.code == 200) {
 
-                    totalCharacters = response.body()!!.data.count
-                    Log.v("eoq", "TOTAL-> $totalCharacters")
+                    totalCharacters = response.body()!!.data.total
 
                     response.body()!!.data.results.let {
                         it.forEach { adapter.add(it) }
@@ -96,8 +96,6 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<MarvelModel>?, response: Response<MarvelModel>?) {
                 if (response?.body()?.code == 200) {
 
-                    Log.v("eoq", "NEXT-> ${response.body()!!.data.offset}")
-
                     response.body()!!.data.results.let {
                         it.forEach {
                             adapter.add(it)
@@ -105,7 +103,9 @@ class MainActivity : AppCompatActivity() {
 
                         progressDialog.dismiss()
 
-                        offSet += 20
+                        if(offSet<totalCharacters) {
+                            offSet += 20
+                        }
                     }
                 } else {
                     progressDialog.dismiss()
@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun buildAlertDialogForProgress() {
-        val dialogView = View.inflate(this, R.layout.custom_layout_progressbar, null)
+        val dialogView = View.inflate(this, R.layout.custom_dialog_progressbar, null)
         val builder = AlertDialog.Builder(this)
         val message = dialogView.findViewById<TextView>(R.id.messageDialog)
 
