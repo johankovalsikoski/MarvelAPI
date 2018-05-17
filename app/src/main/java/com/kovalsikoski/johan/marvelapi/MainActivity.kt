@@ -1,9 +1,9 @@
 package com.kovalsikoski.johan.marvelapi
 
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
@@ -21,12 +21,16 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: CharacterAdapter
     private lateinit var progressDialog: AlertDialog
+    private lateinit var adapter: CharacterAdapter
 
+    private var layoutManager = GridLayoutManager(this@MainActivity, StaggeredGridLayoutManager.VERTICAL)
     private var charactersList = mutableListOf<MarvelModel.MarvelPage.Characters>()
+
+    private var lastVisibleItem = 0
+    private var loadedCharacters = 0
     private var totalCharacters = 0
-    private var offSet = 0
+    private var offSet = 20
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,16 +39,24 @@ class MainActivity : AppCompatActivity() {
         val ts = Date().time.toString()
         val hash = createHash(ts)
 
+        recyclerViewInitializer()
         buildAlertDialogForProgress()
-        firstLoad(ts, hash)
+        loadFirstCharacterPage(ts, hash)
 
-        /*
-        onScroll { if(offSet<totalCharacters) { nextPage(ts,hash,offSet) } }
-        */
+        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                loadedCharacters = adapter.itemCount
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                if(loadedCharacters <= (lastVisibleItem + 5)) {
+                    loadNextCharacterPage(ts, hash)
+                }
 
+            }
+        })
     }
 
-    private fun firstLoad(ts: String, hash: String){
+    private fun loadFirstCharacterPage(ts: String, hash: String){
         progressDialog.show()
 
         val call = RetrofitInitializer().marvelService().getCharactersFirstPage(ts, getString(R.string.public_key),hash)
@@ -54,11 +66,11 @@ class MainActivity : AppCompatActivity() {
                 if (response?.body()?.code == 200) {
 
                     totalCharacters = response.body()!!.data.count
+                    Log.v("eoq", "TOTAL-> $totalCharacters")
 
                     response.body()!!.data.results.let {
-                        charactersList.addAll(it)
+                        it.forEach { adapter.add(it) }
                         progressDialog.dismiss()
-                        initRecyclerView()
                     }
                 } else {
                     progressDialog.dismiss()
@@ -73,23 +85,25 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun nextPage(ts: String, hash: String, offset: Int){
+    private fun loadNextCharacterPage(ts: String, hash: String){
         progressDialog.show()
 
-        val call = RetrofitInitializer().marvelService().getCharactersNextPage(ts, getString(R.string.public_key),hash, offset)
+        val call = RetrofitInitializer().marvelService().getCharactersNextPage(ts, getString(R.string.public_key),hash, offSet)
 
         call.enqueue(object : Callback<MarvelModel> {
             override fun onResponse(call: Call<MarvelModel>?, response: Response<MarvelModel>?) {
                 if (response?.body()?.code == 200) {
 
-                    response.body()!!.data.results.let {
-                        charactersList.addAll(it)
-                        progressDialog.dismiss()
-                        initRecyclerView()
+                    Log.v("eoq", "NEXT-> ${response.body()!!.data.offset}")
 
-                        if(offset<totalCharacters){
-                            offSet+=20
+                    response.body()!!.data.results.let {
+                        it.forEach {
+                            adapter.add(it)
                         }
+
+                        progressDialog.dismiss()
+
+                        offSet += 20
                     }
                 } else {
                     progressDialog.dismiss()
@@ -114,12 +128,10 @@ class MainActivity : AppCompatActivity() {
         return BigInteger(1, messageDigest.digest()).toString(16)
     }
 
-    private fun initRecyclerView(){
+    private fun recyclerViewInitializer(){
         recyclerView = findViewById(R.id.character_recyclerview)
-        adapter = CharacterAdapter(charactersList, this)
+        adapter = CharacterAdapter(charactersList, this@MainActivity)
         recyclerView.adapter = adapter
-
-        val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.layoutManager = layoutManager
     }
 
