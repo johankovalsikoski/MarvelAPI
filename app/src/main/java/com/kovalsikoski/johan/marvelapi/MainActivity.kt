@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private var layoutManager = GridLayoutManager(this@MainActivity, StaggeredGridLayoutManager.VERTICAL)
     private var charactersList = mutableListOf<MarvelModel.MarvelPage.Characters>()
 
+    private var timeStamp = ""
+    private var hash = ""
     private var lastVisibleItem = 0
     private var loadedCharacters = 0
     private var totalCharacters = 0
@@ -36,12 +38,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val ts = Date().time.toString()
-        val hash = createHash(ts)
+        timeStamp = Date().time.toString()
+        hash = createHash(timeStamp)
 
         recyclerViewInitializer()
         buildAlertDialogForProgress()
-        loadFirstCharacterPage(ts, hash)
+        loadFirstCharacterPage(timeStamp, hash)
 
         recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 loadedCharacters = adapter.itemCount
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 if(loadedCharacters <= (lastVisibleItem + 5)) {
-                    loadNextCharacterPage(ts, hash)
+                    loadNextCharacterPage(timeStamp, hash)
                 }
 
             }
