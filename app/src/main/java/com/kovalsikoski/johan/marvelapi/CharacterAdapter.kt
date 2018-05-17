@@ -1,8 +1,6 @@
 package com.kovalsikoski.johan.marvelapi
 
 import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +9,8 @@ import kotlinx.android.synthetic.main.cardview_character.view.*
 
 
 class CharacterAdapter(private val characterList: MutableList<MarvelModel.MarvelPage.Character>,
-                       private val context: Context) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
+                       private val context: Context,
+                       val listener: ClickInterface) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.cardview_character, parent, false)
@@ -22,13 +21,8 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val character = characterList[position]
-        holder.bindView(character)
+        holder.bindView(character, listener)
 
-        holder.itemView.setOnClickListener {
-            context.startActivity(
-                    Intent(context,ComicsActivity::class.java)
-                    .putExtra("comics", character.comics))
-        }
     }
 
     fun add(character: MarvelModel.MarvelPage.Character){
@@ -57,11 +51,19 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindView(character: MarvelModel.MarvelPage.Character) {
+        fun bindView(character: MarvelModel.MarvelPage.Character, listener: ClickInterface) {
             val characterTextView = itemView.character_name_textview
+
+            itemView.setOnClickListener {
+                listener.onClick(character)
+            }
 
             characterTextView.text = character.name
             characterTextView.contentDescription = character.name
         }
+    }
+
+    interface ClickInterface {
+        fun onClick(character: MarvelModel.MarvelPage.Character)
     }
 }

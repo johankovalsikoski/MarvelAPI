@@ -132,6 +132,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun recyclerViewInitializer(){
         recyclerView = findViewById(R.id.character_recyclerview)
+        /*AAAAAAAAAAAAAAAAAAAAAAAAAAA*/
         adapter = CharacterAdapter(charactersList, this@MainActivity)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
