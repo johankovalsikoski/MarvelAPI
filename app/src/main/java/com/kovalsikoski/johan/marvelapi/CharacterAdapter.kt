@@ -1,7 +1,5 @@
 package com.kovalsikoski.johan.marvelapi
 
-import android.app.FragmentManager
-import android.app.FragmentTransaction
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -27,7 +25,13 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
         holder.bindView(character)
 
         holder.itemView.setOnClickListener {
-            //
+
+//            val bundle = Bundle()
+//            bundle.putSerializable("c",character.comics)
+
+            context.startActivity(
+                    Intent(context,ComicsActivity::class.java)
+                    .putExtra("comics", character.comics))
         }
     }
 

@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.cardview_comic.view.*
 
 
 class ComicsAdapter(
-        private val comicsList: MutableList<MarvelModel.MarvelPage.Character.Comic.Item>,
+        private val comics: MarvelModel.MarvelPage.Character.Comic,
         private val context: Context) : RecyclerView.Adapter<ComicsAdapter.ViewHolder>() {
 
 
@@ -18,11 +18,13 @@ class ComicsAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int = comicsList.size
+    override fun getItemCount(): Int = comics.items.size
 
     override fun onBindViewHolder(holder:ViewHolder, position: Int) {
-        val comic = comicsList[position]
-        holder.bindView(comic)
+        val comic = comics
+        comic.items.forEach {
+            holder.bindView(it)
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
