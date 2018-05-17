@@ -25,10 +25,6 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
         holder.bindView(character)
 
         holder.itemView.setOnClickListener {
-
-//            val bundle = Bundle()
-//            bundle.putSerializable("c",character.comics)
-
             context.startActivity(
                     Intent(context,ComicsActivity::class.java)
                     .putExtra("comics", character.comics))
