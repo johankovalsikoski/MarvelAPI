@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.cardview_character.view.*
 
 class CharacterAdapter(private val characterList: MutableList<MarvelModel.MarvelPage.Character>,
                        private val context: Context,
-                       val listener: ClickInterface) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
+                       val listener: OnItemClickInterface) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.cardview_character, parent, false)
@@ -21,8 +21,10 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val character = characterList[position]
-        holder.bindView(character, listener)
-
+        holder.bindView(character)
+        holder.itemView.setOnClickListener {
+            listener.onItemClickListener(character.comics)
+        }
     }
 
     fun add(character: MarvelModel.MarvelPage.Character){
@@ -51,19 +53,13 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindView(character: MarvelModel.MarvelPage.Character, listener: ClickInterface) {
+        fun bindView(character: MarvelModel.MarvelPage.Character) {
             val characterTextView = itemView.character_name_textview
-
-            itemView.setOnClickListener {
-                listener.onClick(character)
-            }
 
             characterTextView.text = character.name
             characterTextView.contentDescription = character.name
         }
     }
 
-    interface ClickInterface {
-        fun onClick(character: MarvelModel.MarvelPage.Character)
-    }
+
 }

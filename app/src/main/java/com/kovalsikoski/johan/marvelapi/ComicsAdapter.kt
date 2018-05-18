@@ -21,10 +21,8 @@ class ComicsAdapter(
     override fun getItemCount(): Int = comics.items.size
 
     override fun onBindViewHolder(holder:ViewHolder, position: Int) {
-        val comic = comics
-        comic.items.forEach {
-            holder.bindView(it)
-        }
+        val comic = comics.items[position]
+        holder.bindView(comic)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

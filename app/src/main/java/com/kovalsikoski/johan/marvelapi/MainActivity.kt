@@ -132,8 +132,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun recyclerViewInitializer(){
         recyclerView = findViewById(R.id.character_recyclerview)
-        /*AAAAAAAAAAAAAAAAAAAAAAAAAAA*/
-        adapter = CharacterAdapter(charactersList, this@MainActivity)
+        adapter = CharacterAdapter(charactersList, this@MainActivity, object: OnItemClickInterface{
+            override fun onItemClickListener(comics: MarvelModel.MarvelPage.Character.Comic) {
+
+                val characterComics = ComicsDialog.newInstance(
+                        this@MainActivity,
+                        comics)
+
+                supportFragmentManager
+                        .beginTransaction()
+                        .add(characterComics, null)
+                        .commitAllowingStateLoss()
+            }
+        })
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
     }
