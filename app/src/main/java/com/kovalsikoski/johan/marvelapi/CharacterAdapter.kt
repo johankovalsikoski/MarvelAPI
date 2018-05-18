@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.cardview_character.view.*
 
 class CharacterAdapter(private val characterList: MutableList<MarvelModel.MarvelPage.Character>,
                        private val context: Context,
-                       val listener: OnItemClickInterface) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
+                       private val listener: OnItemClickInterface) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.cardview_character, parent, false)
