@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.cardview_character.view.*
 
 
@@ -55,9 +56,21 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindView(character: MarvelModel.MarvelPage.Character) {
             val characterTextView = itemView.character_name_textview
+            val descriptionTextView = itemView.description_textview
+            val profileImageView = itemView.profile_imageview
 
             characterTextView.text = character.name
             characterTextView.contentDescription = character.name
+
+            descriptionTextView.text = if (character.description!="") character.description else "Não há descrição de personagem."
+            descriptionTextView.contentDescription = if (character.description!="") character.description else "Não há descrição de personagem."
+
+            if(character.thumbnail.path!=""){
+                Picasso.get().load("${character.thumbnail.path}.${character.thumbnail.extension}").fit().into(profileImageView)
+                profileImageView.contentDescription = "Imagem de perfil do personagem ${character.name}"
+            } else {
+                profileImageView.visibility = View.GONE
+            }
         }
     }
 
