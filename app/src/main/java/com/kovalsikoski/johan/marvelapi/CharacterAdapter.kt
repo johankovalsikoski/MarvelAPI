@@ -62,12 +62,12 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
             characterTextView.text = character.name
             characterTextView.contentDescription = character.name
 
-            descriptionTextView.text = if (character.description!="") character.description else "Não há descrição de personagem."
-            descriptionTextView.contentDescription = if (character.description!="") character.description else "Não há descrição de personagem."
+            descriptionTextView.text = if (character.description!="") character.description else "Sorry, but this character has no description."
+            descriptionTextView.contentDescription = if (character.description!="") character.description else "Sorry, but this character has no description."
 
             if(character.thumbnail.path!=""){
                 Picasso.get().load("${character.thumbnail.path}.${character.thumbnail.extension}").fit().into(profileImageView)
-                profileImageView.contentDescription = "Imagem de perfil do personagem ${character.name}"
+                profileImageView.contentDescription = "Character profile image ${character.name}"
             } else {
                 profileImageView.visibility = View.GONE
             }

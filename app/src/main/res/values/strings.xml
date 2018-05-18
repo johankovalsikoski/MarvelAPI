@@ -1,11 +1,10 @@
 <resources>
     <string name="app_name">Marvel API</string>
 
-    <string name="loading_progressbar">"Carregando…"</string>
-    <string name="cant_load_content">Verifique sua conexão com a internet</string>
+    <string name="loading_progressbar">"Loading…"</string>
+    <string name="cant_load_content">Please, verify your internet connection.</string>
 
     <string name="public_key">63c845f07f40335b0a40a3942bcc5ca8</string>
     <string name="private_key">0dba2430609a6e2aaa8c2f07997a6be68c331ba9</string>
-    <string name="comics_title">Participações em Quadrinhos</string>
-    <string name="main_title">Lista de Heróis</string>
+    <string name="main_title">Hero List</string>
 </resources>
