@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.cardview_character.view.*
 
@@ -55,9 +57,9 @@ class CharacterAdapter(private val characterList: MutableList<MarvelModel.Marvel
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindView(character: MarvelModel.MarvelPage.Character) {
-            val characterTextView = itemView.character_name_textview
-            val descriptionTextView = itemView.description_textview
-            val profileImageView = itemView.profile_imageview
+            val characterTextView = itemView.findViewById<TextView>(R.id.character_name_textview)
+            val descriptionTextView = itemView.findViewById<TextView>(R.id.description_textview)
+            val profileImageView = itemView.findViewById<ImageView>(R.id.profile_imageview)
 
             characterTextView.text = character.name
             characterTextView.contentDescription = character.name
