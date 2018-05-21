@@ -27,8 +27,9 @@ class MainActivity : AppCompatActivity() {
     private var layoutManager = GridLayoutManager(this@MainActivity, StaggeredGridLayoutManager.VERTICAL)
     private var charactersList = mutableListOf<MarvelModel.MarvelPage.Character>()
 
-    private var timeStamp = ""
-    private var hash = ""
+    private val timeStamp: String by lazy { Date().time.toString() }
+    private val hash: String by lazy { createHash(timeStamp) }
+
     private var lastVisibleItem = 0
     private var loadedCharacters = 0
     private var totalCharacters = 0
@@ -37,9 +38,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        timeStamp = Date().time.toString()
-        hash = createHash(timeStamp)
 
         recyclerViewInitializer()
         buildAlertDialogForProgress()
@@ -53,10 +51,8 @@ class MainActivity : AppCompatActivity() {
                 if(loadedCharacters <= (lastVisibleItem + 5)) {
                     loadNextCharacterPage(timeStamp, hash)
                 }
-
             }
         })
-
     }
 
     private fun loadFirstCharacterPage(ts: String, hash: String){
@@ -120,9 +116,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun createHash(ts: String): String {
+    private fun createHash(timeStamp: String): String {
 
-        val hash = "$ts${getString(R.string.private_key)}${getString(R.string.public_key)}"
+        val hash = "$timeStamp${getString(R.string.private_key)}${getString(R.string.public_key)}"
 
         val messageDigest = MessageDigest.getInstance("MD5")
         messageDigest.update(hash.toByteArray(), 0, hash.length)

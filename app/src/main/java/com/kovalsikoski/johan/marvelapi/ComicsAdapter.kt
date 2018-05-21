@@ -5,8 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.cardview_comic.view.*
-
+import android.widget.TextView
 
 class ComicsAdapter(
         private val comics: MarvelModel.MarvelPage.Character.Comic,
@@ -27,7 +26,7 @@ class ComicsAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindView(item: MarvelModel.MarvelPage.Character.Comic.Item) {
-            val comicTextView = itemView.comic_textview
+            val comicTextView = itemView.findViewById<TextView>(R.id.comic_textview)
 
             comicTextView.text = item.name
             comicTextView.contentDescription = item.name
